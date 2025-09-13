@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-3xl font-bold underline">
-      Hello world - Test!
+      Form renderer page
     </h1>
   </div>
 </template>
@@ -11,3 +11,4 @@
 
 <style scoped>
 </style>
+  

@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '../layouts/DefaultLayout.vue';
-import Main from '../pages/Main.vue';
-import Test from '../pages/Test.vue';
+import Home from '../pages/Home.vue';
+import FormBuilder from '../pages/FormBuilder.vue';
+import FormRenderer from '../pages/FormRenderer.vue';
 
 const routes = [
   {
@@ -10,13 +11,18 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'Main',
-        component: Main,
+        name: 'Home',
+        component: Home,
       },
       {
-        path: 'test',
-        name: 'Test',
-        component: Test,
+        path: 'form-builder',
+        name: 'FormBuilder',
+        component: FormBuilder,
+      },
+      {
+        path: 'form-renderer',
+        name: 'FormRenderer',
+        component: FormRenderer,
       },
     ],
   },
