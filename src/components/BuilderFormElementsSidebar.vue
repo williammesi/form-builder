@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {  Mail, Phone, TextCursorInput } from "lucide-vue-next"
+import {  Mail, Phone, TextCursorInput, BetweenHorizontalStart  } from "lucide-vue-next"
 import {
   Sidebar,
   SidebarContent,
@@ -9,42 +9,74 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
 } from "./ui/sidebar"
+import type { FormElement } from '../types/form';
+import type { FunctionalComponent } from 'vue';
+// Interface for sidebar items, extending FormElement without id
+interface SidebarFormElement extends Omit<FormElement, 'id'> {
+  icon: FunctionalComponent;
+}
+const emit = defineEmits<{
+       addElement: [payload: FormElement];
+     }>();
 
-// Menu items.
-const items = [
+// Form elements list
+const items: SidebarFormElement[] = [
   {
-    title: "Input field",
-    url: "#",
+    type: 'input',
+    label: 'Text Input',
+    placeholder: 'Enter text',
     icon: TextCursorInput,
   },
   {
-    title: "Email field",
-    url: "#",
+    type: 'input',
+    label: 'Email Field',
+    placeholder: 'Enter email',
     icon: Mail,
   },
   {
-    title: "Phone number field",
-    url: "#",
+    type: 'input',
+    label: 'Phone Number Field',
+    placeholder: 'Enter phone number',
     icon: Phone,
   },
- 
+  {
+    type: 'select',
+    label: 'Select Dropdown',
+    placeholder: 'Select an option',
+    icon: BetweenHorizontalStart,
+  },
 ];
+
+// Handle click to emit form element
+     const handleClick = (item: SidebarFormElement) => {
+       emit('addElement', {
+         id: Date.now().toString(), // Generate unique ID
+         type: item.type,
+         label: item.label,
+         placeholder: item.placeholder,
+       });
+     };
 </script>
 
 <template>
   <Sidebar side="left" variant="floating">
+    <SidebarHeader class="p-4 font-medium text-center flex flex-row items-center justify-start" title="Properties" >
+      <BetweenHorizontalStart class=" w-5 h-5" />
+      <span>Form elements</span>
+    </SidebarHeader>
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupLabel>Form elements</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-              <SidebarMenuItem v-for="item in items" :key="item.title">
+              <SidebarMenuItem v-for="item in items" :key="item.label">
                 <SidebarMenuButton asChild>
-                    <a :href="item.url">
-                      <component :is="item.icon" />
-                      <span>{{item.title}}</span>
-                    </a>
+                    <button class="flex items-center w-full text-left" @click="handleClick(item)">
+                      <component :is="item.icon" class="w-5 h-5 mr-2" />
+                      <span>{{ item.label }}</span>
+                    </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
           </SidebarMenu>

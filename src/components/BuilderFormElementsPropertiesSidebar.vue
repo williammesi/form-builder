@@ -39,7 +39,7 @@ const items = [
 
 <template>
   <Sidebar side="right" variant="floating">
-    <SidebarHeader class=" font-medium text-center flex flex-row items-center justify-start" title="Properties" >
+    <SidebarHeader class="p-4 font-medium text-center flex flex-row items-center justify-start" title="Properties" >
       <Settings class=" w-5 h-5" />
       <span>Properties</span>
     </SidebarHeader>
