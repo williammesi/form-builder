@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {  Mail, Phone, TextCursorInput, Settings } from "lucide-vue-next"
+import { Mail, Phone, TextCursorInput, Settings } from "lucide-vue-next"
 import {
   Sidebar,
   SidebarContent,
@@ -29,7 +29,7 @@ const selectedElement = computed(() => {
 });
 
 // Update label or placeholder reactively
-const updateElementProperty = (property: 'label' | 'placeholder' | 'required', value: string | boolean) => {
+const updateElementProperty = (property: 'label' | 'placeholder' | 'required' | 'options', value: string | boolean | string[]) => {
   if (selectedElement.value) {
     const index = previewForm.value.findIndex((e: FormElement) => e.id === selectedElementId.value);
     if (index !== -1) {
@@ -38,19 +38,21 @@ const updateElementProperty = (property: 'label' | 'placeholder' | 'required', v
   }
 };
 
-
-
-// Handle required checkbox toggle - update this function
+// Handle required checkbox toggle
 const updateRequired = (checked: boolean | 'indeterminate') => {
-  // Convert to boolean if it's indeterminate
   const booleanValue = checked === true;
   updateElementProperty('required', booleanValue);
 };
 
-
-
-
-
+// Handle option updates for select elements
+const updateOption = (optionIndex: number, newValue: string | number) => {
+  if (selectedElement.value && selectedElement.value.options) {
+    const updatedOptions = [...selectedElement.value.options];
+    
+    updatedOptions[optionIndex] = String(newValue);
+    updateElementProperty('options', updatedOptions);
+  }
+};
 </script>
 
 <template>
@@ -105,31 +107,32 @@ const updateRequired = (checked: boolean | 'indeterminate') => {
                     :model-value="selectedElement.required"
                     @update:model-value="updateRequired"
                   />
-                  <!-- For debug purposes : -->
                   <span>This field can't be empty</span> 
                 </div>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup v-if="selectedElement.type==='select'">
+        <SidebarGroup v-if="selectedElement?.type === 'select'" :key="`options-group-${selectedElement.id}`">
           <SidebarGroupLabel>Dropdown options</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem :key="index" v-for="(option, index) in selectedElement.options ?? []">
-        <div class="flex items-center space-x-2">
-         <Input
-            class="border-gray-400 flex-1"
-            v-model="selectedElement.options![index]"
-            :placeholder="`Option ${index + 1}`"
-          />
-          
-        </div>
-      </SidebarMenuItem>
+            <SidebarMenu :key="`options-menu-${selectedElement.id}`">
+              <SidebarMenuItem 
+                v-for="(option, index) in selectedElement.options ?? []" 
+                :key="`${selectedElement.id}-option-${index}-${option}`"
+              >
+                <div class="flex items-center space-x-2">
+                  <Input
+                    class="border-gray-400 flex-1"
+                    :model-value="option"
+                    @update:model-value="updateOption(index, $event)"
+                    :placeholder="`Option ${index + 1}`"
+                  />
+                </div>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
       </template>
     </SidebarContent>
   </Sidebar>

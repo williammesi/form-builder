@@ -24,6 +24,7 @@ interface SidebarFormElement extends Omit<FormElement, 'id'> {
 
 const emit = defineEmits<{
   addElement: [payload: FormElement];
+  selectElement: [elementId: string];
 }>();
 
 const items: SidebarFormElement[] = [
@@ -43,7 +44,6 @@ const items: SidebarFormElement[] = [
     icon: Mail,
     required: true,
   },
-
   {
     type: 'select',
     label: 'Select Dropdown',
@@ -54,32 +54,43 @@ const items: SidebarFormElement[] = [
   },
 ];
 
-
-
-const handleClick = (item: SidebarFormElement) => {
-  console.log('Clicked item:', item);
-  emit('addElement', {
+const createFormElement = (item: SidebarFormElement): FormElement => {
+  const baseElement = {
     id: uuidv4(),
     type: item.type,
     label: item.label,
     placeholder: item.placeholder,
     required: true,
-    ...(item.type === 'input' ? { inputType: item.inputType } : {}),
-    ...(item.type === 'select' ? { options: item.options } : {}),
-  });
+  };
+
+  // Add type-specific properties with proper cloning
+  if (item.type === 'input') {
+    return {
+      ...baseElement,
+      inputType: item.inputType,
+    };
+  } else if (item.type === 'select') {
+    return {
+      ...baseElement,
+      // Create a new array instance to avoid shared references
+      options: item.options ? [...item.options] : [],
+    };
+  }
+
+  return baseElement;
+};
+
+const handleClick = (item: SidebarFormElement) => {
+  console.log('Clicked item:', item);
+  const newElement = createFormElement(item);
+  emit('addElement', newElement);
+  // Emit a new event to select the element after adding
+  emit('selectElement', newElement.id);
 };
 
 const handleClone = (item: SidebarFormElement): FormElement => {
   console.log('Cloning item:', item);
-  return {
-    id: uuidv4(),
-    type: item.type,
-    label: item.label,
-    placeholder: item.placeholder,
-    required: true,
-    ...(item.type === 'input' ? { inputType: item.inputType } : {}),
-    ...(item.type === 'select' ? { options: item.options } : {}),
-  };
+  return createFormElement(item);
 };
 
 const onDragStart = (event: DragEvent) => {
@@ -139,7 +150,6 @@ const onDragStart = (event: DragEvent) => {
                           <SelectTrigger :disabled="true" class="w-full bg-gray-100 cursor-move select-preview">
                             <SelectValue :placeholder="element.placeholder" />
                           </SelectTrigger>
-                         
                         </Select>
                       </div>
                     </button>
@@ -158,7 +168,6 @@ const onDragStart = (event: DragEvent) => {
 /* Style the select preview to mimic disabled appearance and prevent interaction */
 .select-preview {
   pointer-events: none; /* Prevent select from capturing click events */
-  
 }
 
 /* Ensure cursor-move is applied consistently on the parent button */
