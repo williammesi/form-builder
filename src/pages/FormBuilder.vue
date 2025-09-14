@@ -5,11 +5,15 @@ import BuilderFormElementsPropertiesSidebar from "@/components/BuilderFormElemen
 import { GripHorizontal, Trash } from 'lucide-vue-next';
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 import type { FormElement } from '../types/form';
 import Draggable from 'vuedraggable';
 
 const previewForm = ref<FormElement[]>([]);
+const selectedElementId = ref<string | null>(null);
+
+provide('previewForm', previewForm);
+provide('selectedElementId', selectedElementId);
 
 const addElement = (element: FormElement) => {
   console.log('Adding element:', element);
@@ -27,7 +31,10 @@ const getComponent = (type: FormElement['type']) => {
   }
 };
 
-
+const selectElement = (elementId: string) => {
+  selectedElementId.value = elementId;
+  console.log('Selected element ID:', selectedElementId.value);
+};
 </script>
 
 <template>
@@ -51,11 +58,17 @@ const getComponent = (type: FormElement['type']) => {
             item-key="id"
             handle=".drag-handle"
             class="h-full"
-            
             :animation="300"
           >
             <template #item="{ element }">
-              <div class="mb-4 w-full flex gap-2 flex-row border-gray-200 border-0 hover:border-2 p-4 rounded-lg form-element-item">
+              <div
+                class="mb-4 w-full flex gap-2 flex-row border-gray-200 border-0 p-4 rounded-lg form-element-item"
+                :class="{ 'border-2 border-blue-500': selectedElementId === element.id }"
+                @click="selectElement(element.id)"
+                role="button"
+                tabindex="0"
+                @keydown.enter="selectElement(element.id)"
+              >
                 <div class="flex flex-col items-start w-8/10">
                   <label class="block font-medium mb-1">{{ element.label }}</label>
                   <component
@@ -80,7 +93,7 @@ const getComponent = (type: FormElement['type']) => {
                 <div class="flex flex-row px-4 items-center gap-2 w-2/10 justify-center">
                   <button
                     class="p-2 rounded-lg bg-red-400 hover:bg-red-500 cursor-pointer"
-                    @click="previewForm = previewForm.filter(e => e.id !== element.id)"
+                    @click.stop="previewForm = previewForm.filter(e => e.id !== element.id)"
                   >
                     <Trash class="w-5 h-5 text-gray-50 cursor-pointer" />
                   </button>
@@ -101,5 +114,14 @@ const getComponent = (type: FormElement['type']) => {
 <style scoped>
 .drag-handle {
   cursor: move;
+}
+.form-element-item {
+  cursor: pointer;
+}
+.form-element-item:hover {
+  border: 2px solid #e5e7eb; /* Tailwind's gray-200 */
+}
+.form-element-item.border-blue-500 {
+  border: 2px solid #3b82f6; /* Tailwind's blue-500 */
 }
 </style>

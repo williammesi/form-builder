@@ -14,7 +14,28 @@ import {
   Input,
 } from "./ui/input"
 import SidebarHeader from "./ui/sidebar/SidebarHeader.vue";
+import { inject, computed, type Ref } from "vue";
+import type { FormElement } from '../types/form';
 
+// Inject previewForm and selectedElementId from parent
+const previewForm = inject('previewForm') as Ref<FormElement[]>;
+const selectedElementId = inject('selectedElementId') as Ref<string | null>;
+
+// Compute the selected element based on selectedElementId
+const selectedElement = computed(() => {
+  if (!selectedElementId.value) return null;
+  return previewForm.value.find((element: FormElement) => element.id === selectedElementId.value) || null;
+});
+
+// Update label or placeholder reactively
+const updateElementProperty = (property: 'label' | 'placeholder', value: string) => {
+  if (selectedElement.value) {
+    const index = previewForm.value.findIndex((e: FormElement) => e.id === selectedElementId.value);
+    if (index !== -1) {
+      previewForm.value[index] = { ...previewForm.value[index], [property]: value };
+    }
+  }
+};
 
 // Menu items.
 const items = [
@@ -44,26 +65,39 @@ const items = [
       <span>Properties</span>
     </SidebarHeader>
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Label</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
+      <div v-if="!selectedElement" class="p-4 text-gray-500">
+        Select a form element to edit its properties
+      </div>
+      <template v-else>
+        <SidebarGroup>
+          <SidebarGroupLabel>Label</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
               <SidebarMenuItem>
-                <Input placeholder="Label" />
+                <Input
+                  :value="selectedElement.label"
+                  @input="updateElementProperty('label', $event.target.value)"
+                  placeholder="Enter label"
+                />
               </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-      <SidebarGroup>
-        <SidebarGroupLabel>Placeholder</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Placeholder</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
               <SidebarMenuItem>
-                <Input placeholder="Placeholder" />
+                <Input
+                  :value="selectedElement.placeholder"
+                  @input="updateElementProperty('placeholder', $event.target.value)"
+                  placeholder="Enter placeholder"
+                />
               </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </template>
     </SidebarContent>
   </Sidebar>
 </template>
