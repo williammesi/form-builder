@@ -4,7 +4,7 @@ import BuilderFormElementsSidebar from "@/components/BuilderFormElementsSidebar.
 import BuilderFormElementsPropertiesSidebar from "@/components/BuilderFormElementsPropertiesSidebar.vue";
 import { GripHorizontal, Trash } from 'lucide-vue-next';
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger,SelectGroup, SelectLabel, SelectValue } from "../components/ui/select";
 import { provide, ref } from 'vue';
 import type { FormElement } from '../types/form';
 import Draggable from 'vuedraggable';
@@ -14,6 +14,8 @@ const selectedElementId = ref<string | null>(null);
 
 provide('previewForm', previewForm);
 provide('selectedElementId', selectedElementId);
+
+
 
 const addElement = (element: FormElement) => {
   console.log('Adding element:', element);
@@ -75,7 +77,7 @@ const selectElement = (elementId: string) => {
                     :is="getComponent(element.type)"
                     v-bind="{
                       placeholder: element.placeholder,
-                      ...(element.type === 'input' ? { type: element.label.includes('Email') ? 'email' : element.label.includes('Phone') ? 'tel' : 'text' } : {}),
+                      ...(element.type === 'input' ? { type: element.inputType || 'text' } : {}),
                     }"
                     class="w-full"
                   >
@@ -84,9 +86,16 @@ const selectElement = (elementId: string) => {
                         <SelectValue :placeholder="element.placeholder" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="option1">Option 1</SelectItem>
-                        <SelectItem value="option2">Option 2</SelectItem>
+                       
+                        <SelectItem 
+                          v-for="option in element.options || []" 
+                          :key="option" 
+                          :value="option"
+                        >
+                          {{ option }}
+                        </SelectItem>
                       </SelectContent>
+                      
                     </template>
                   </component>
                 </div>

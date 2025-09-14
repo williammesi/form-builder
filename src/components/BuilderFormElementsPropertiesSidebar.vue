@@ -16,6 +16,7 @@ import {
 import SidebarHeader from "./ui/sidebar/SidebarHeader.vue";
 import { inject, computed, type Ref } from "vue";
 import type { FormElement } from '../types/form';
+import {Checkbox} from "./ui/checkbox";
 
 // Inject previewForm and selectedElementId from parent
 const previewForm = inject('previewForm') as Ref<FormElement[]>;
@@ -28,7 +29,7 @@ const selectedElement = computed(() => {
 });
 
 // Update label or placeholder reactively
-const updateElementProperty = (property: 'label' | 'placeholder', value: string) => {
+const updateElementProperty = (property: 'label' | 'placeholder' | 'required', value: string | boolean) => {
   if (selectedElement.value) {
     const index = previewForm.value.findIndex((e: FormElement) => e.id === selectedElementId.value);
     if (index !== -1) {
@@ -37,25 +38,19 @@ const updateElementProperty = (property: 'label' | 'placeholder', value: string)
   }
 };
 
-// Menu items.
-const items = [
-  {
-    title: "Input field",
-    url: "#",
-    icon: TextCursorInput,
-  },
-  {
-    title: "Email field",
-    url: "#",
-    icon: Mail,
-  },
-  {
-    title: "Phone number field",
-    url: "#",
-    icon: Phone,
-  },
- 
-];
+
+
+// Handle required checkbox toggle - update this function
+const updateRequired = (checked: boolean | 'indeterminate') => {
+  // Convert to boolean if it's indeterminate
+  const booleanValue = checked === true;
+  updateElementProperty('required', booleanValue);
+};
+
+
+
+
+
 </script>
 
 <template>
@@ -75,6 +70,7 @@ const items = [
             <SidebarMenu>
               <SidebarMenuItem>
                 <Input
+                  class="border-gray-400"
                   :value="selectedElement.label"
                   @input="updateElementProperty('label', $event.target.value)"
                   placeholder="Enter label"
@@ -89,6 +85,7 @@ const items = [
             <SidebarMenu>
               <SidebarMenuItem>
                 <Input
+                  class="border-gray-400"
                   :value="selectedElement.placeholder"
                   @input="updateElementProperty('placeholder', $event.target.value)"
                   placeholder="Enter placeholder"
@@ -97,6 +94,42 @@ const items = [
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Required</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <div class="p-2 flex items-center space-x-2">
+                  <Checkbox
+                    class=" border-gray-400"
+                    :model-value="selectedElement.required"
+                    @update:model-value="updateRequired"
+                  />
+                  <!-- For debug purposes : -->
+                  <span>This field can't be empty</span> 
+                </div>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup v-if="selectedElement.type==='select'">
+          <SidebarGroupLabel>Dropdown options</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem :key="index" v-for="(option, index) in selectedElement.options ?? []">
+        <div class="flex items-center space-x-2">
+         <Input
+            class="border-gray-400 flex-1"
+            v-model="selectedElement.options![index]"
+            :placeholder="`Option ${index + 1}`"
+          />
+          
+        </div>
+      </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
       </template>
     </SidebarContent>
   </Sidebar>

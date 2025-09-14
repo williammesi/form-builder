@@ -31,38 +31,30 @@ const items: SidebarFormElement[] = [
     type: 'input',
     label: 'Text Input',
     placeholder: 'Enter text',
+    inputType: 'text',
     icon: TextCursorInput,
+    required: true,
   },
   {
     type: 'input',
     label: 'Email Field',
     placeholder: 'Enter email',
+    inputType: 'email',
     icon: Mail,
+    required: true,
   },
-  {
-    type: 'input',
-    label: 'Phone Number Field',
-    placeholder: 'Enter phone number',
-    icon: Phone,
-  },
+
   {
     type: 'select',
     label: 'Select Dropdown',
     placeholder: 'Select an option',
     icon: BetweenHorizontalStart,
+    required: true,
+    options: ["option1","option2","option3"]
   },
 ];
 
-const getComponent = (type: FormElement['type']) => {
-  switch (type) {
-    case 'input':
-      return Input;
-    case 'select':
-      return Select;
-    default:
-      return 'div';
-  }
-};
+
 
 const handleClick = (item: SidebarFormElement) => {
   console.log('Clicked item:', item);
@@ -71,6 +63,9 @@ const handleClick = (item: SidebarFormElement) => {
     type: item.type,
     label: item.label,
     placeholder: item.placeholder,
+    required: true,
+    ...(item.type === 'input' ? { inputType: item.inputType } : {}),
+    ...(item.type === 'select' ? { options: item.options } : {}),
   });
 };
 
@@ -81,6 +76,9 @@ const handleClone = (item: SidebarFormElement): FormElement => {
     type: item.type,
     label: item.label,
     placeholder: item.placeholder,
+    required: true,
+    ...(item.type === 'input' ? { inputType: item.inputType } : {}),
+    ...(item.type === 'select' ? { options: item.options } : {}),
   };
 };
 
