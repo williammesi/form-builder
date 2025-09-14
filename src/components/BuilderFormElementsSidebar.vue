@@ -14,6 +14,8 @@ import {
 import type { FormElement } from '../types/form';
 import type { FunctionalComponent } from 'vue';
 // Interface for sidebar items, extending FormElement without id
+import { v4 as uuidv4 } from 'uuid';
+
 interface SidebarFormElement extends Omit<FormElement, 'id'> {
   icon: FunctionalComponent;
 }
@@ -52,7 +54,7 @@ const items: SidebarFormElement[] = [
 // Handle click to emit form element
      const handleClick = (item: SidebarFormElement) => {
        emit('addElement', {
-         id: Date.now().toString(), // Generate unique ID
+         id: uuidv4(), // Generate unique ID
          type: item.type,
          label: item.label,
          placeholder: item.placeholder,
