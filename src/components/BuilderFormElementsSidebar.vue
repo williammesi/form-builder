@@ -15,6 +15,8 @@ import type { FormElement } from '../types/form';
 import type { FunctionalComponent } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import Draggable from 'vuedraggable';
+import { Input } from "./ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "./ui/select";
 
 interface SidebarFormElement extends Omit<FormElement, 'id'> {
   icon: FunctionalComponent;
@@ -51,8 +53,19 @@ const items: SidebarFormElement[] = [
   },
 ];
 
+const getComponent = (type: FormElement['type']) => {
+  switch (type) {
+    case 'input':
+      return Input;
+    case 'select':
+      return Select;
+    default:
+      return 'div';
+  }
+};
+
 const handleClick = (item: SidebarFormElement) => {
-  console.log('Clicked item:', item); // Debug click
+  console.log('Clicked item:', item);
   emit('addElement', {
     id: uuidv4(),
     type: item.type,
@@ -62,7 +75,7 @@ const handleClick = (item: SidebarFormElement) => {
 };
 
 const handleClone = (item: SidebarFormElement): FormElement => {
-  console.log('Cloning item:', item); // Debug clone
+  console.log('Cloning item:', item);
   return {
     id: uuidv4(),
     type: item.type,
@@ -71,8 +84,8 @@ const handleClone = (item: SidebarFormElement): FormElement => {
   };
 };
 
-const onDragStart = (event: any) => {
-  console.log('Drag started from sidebar:', event); // Debug drag
+const onDragStart = (event: DragEvent) => {
+  console.log('Drag started from sidebar:', event);
 };
 </script>
 
@@ -100,13 +113,37 @@ const onDragStart = (event: any) => {
                 <SidebarMenuItem>
                   <SidebarMenuButton as-child>
                     <button
-                      class="flex items-center w-full text-left cursor-move"
+                      class="flex flex-col h-25 items-center w-full mb-2 text-left cursor-move border-2 border-gray-200"
                       @click.stop="handleClick(element)"
                       draggable="true"
                       :aria-label="`Drag or click to add ${element.label}`"
                     >
-                      <component :is="element.icon" class="w-5 h-5 mr-2" />
-                      <span>{{ element.label }}</span>
+                      <div class="flex items-center w-full">
+                        <component :is="element.icon" class="w-5 h-5 mr-2" />
+                        <span>{{ element.label }}</span>
+                      </div>
+                      <div class="flex items-center justify-center w-full">
+                        <!-- Render Input Preview -->
+                        <Input
+                          v-if="element.type === 'input'"
+                          :type="element.label.includes('Email') ? 'email' : element.label.includes('Phone') ? 'tel' : 'text'"
+                          :placeholder="element.placeholder"
+                          disabled
+                          class="w-full cursor-move"
+                        />
+                        <!-- Render Select Preview -->
+                        <Select
+                          v-else-if="element.type === 'select'"
+                          class="w-full cursor-move select-preview"
+                          aria-disabled="true"
+                          disabled
+                        >
+                          <SelectTrigger :disabled="true" class="w-full bg-gray-100 cursor-move select-preview">
+                            <SelectValue :placeholder="element.placeholder" />
+                          </SelectTrigger>
+                         
+                        </Select>
+                      </div>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -118,3 +155,17 @@ const onDragStart = (event: any) => {
     </SidebarContent>
   </Sidebar>
 </template>
+
+<style scoped>
+/* Style the select preview to mimic disabled appearance and prevent interaction */
+.select-preview {
+  pointer-events: none; /* Prevent select from capturing click events */
+  
+}
+
+/* Ensure cursor-move is applied consistently on the parent button */
+button.cursor-move,
+button.cursor-move * {
+  cursor: move !important; /* Override any default cursors */
+}
+</style>
