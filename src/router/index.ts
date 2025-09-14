@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DefaultLayout from '../layouts/DefaultLayout.vue';
-import Home from '../pages/Home.vue';
-import FormBuilder from '../pages/FormBuilder.vue';
-import FormRenderer from '../pages/FormRenderer.vue';
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
+import Home from '@/pages/Home.vue';
+import FormBuilder from '@/pages/FormBuilder.vue';
+import FormRenderer from '@/pages/FormRenderer.vue';
 
 const routes = [
   {

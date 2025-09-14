@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Mail, Phone, TextCursorInput, Settings } from "lucide-vue-next"
+import { Settings } from "lucide-vue-next"
 import {
   Sidebar,
   SidebarContent,
@@ -7,16 +7,15 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-} from "./ui/sidebar"
+} from "@/components/ui/sidebar"
 import {
   Input,
-} from "./ui/input"
-import SidebarHeader from "./ui/sidebar/SidebarHeader.vue";
+} from "@/components/ui/input"
+import SidebarHeader from "@/components/ui/sidebar/SidebarHeader.vue";
 import { inject, computed, type Ref } from "vue";
-import type { FormElement } from '../types/form';
-import {Checkbox} from "./ui/checkbox";
+import type { FormElement } from '@/types/form';
+import {Checkbox} from "@/components/ui/checkbox";
 
 // Inject previewForm and selectedElementId from parent
 const previewForm = inject('previewForm') as Ref<FormElement[]>;

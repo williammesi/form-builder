@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TextCursorInput, Mail, Phone, BetweenHorizontalStart } from "lucide-vue-next";
+import { TextCursorInput, Mail, BetweenHorizontalStart } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -10,13 +10,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-} from "./ui/sidebar";
-import type { FormElement } from '../types/form';
+} from "@/components/ui/sidebar";
+import type { FormElement } from '@/types/form';
 import type { FunctionalComponent } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import Draggable from 'vuedraggable';
-import { Input } from "./ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "./ui/select";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SidebarFormElement extends Omit<FormElement, 'id'> {
   icon: FunctionalComponent;

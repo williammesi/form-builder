@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { SidebarProvider } from "../components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import BuilderFormElementsSidebar from "@/components/BuilderFormElementsSidebar.vue";
 import BuilderFormElementsPropertiesSidebar from "@/components/BuilderFormElementsPropertiesSidebar.vue";
 import FormElement from "@/components/FormElement.vue";
 import { provide, ref } from 'vue';
-import type { FormElement as FormElementType } from '../types/form';
+import type { FormElement as FormElementType } from '@/types/form';
 import Draggable from 'vuedraggable';
 
 const previewForm = ref<FormElementType[]>([]);

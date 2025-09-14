@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { GripHorizontal, Trash } from 'lucide-vue-next';
-import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import type { FormElement } from '../types/form';
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { FormElement } from '@/types/form';
 
 interface Props {
   element: FormElement;
