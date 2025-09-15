@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SidebarProvider } from "@/components/ui/sidebar";
-import BuilderFormElementsSidebar from "@/components/BuilderFormElementsSidebar.vue";
-import BuilderFormElementsPropertiesSidebar from "@/components/BuilderFormElementsPropertiesSidebar.vue";
+import BuilderFormElementsSidebar from "@/components/BuilderFormElementsSidebar/BuilderFormElementsSidebar.vue";
+import BuilderFormElementsPropertiesSidebar from "@/components/BuilderFormElementsPropertiesSidebar/BuilderFormElementsPropertiesSidebar.vue";
 import FormElement from "@/components/FormElement.vue";
 
 import Draggable from 'vuedraggable';
