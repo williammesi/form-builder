@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Settings } from "lucide-vue-next"
+import { Settings, Plus, X } from "lucide-vue-next"
 import {
   Sidebar,
   SidebarContent,
@@ -13,45 +13,19 @@ import {
   Input,
 } from "@/components/ui/input"
 import SidebarHeader from "@/components/ui/sidebar/SidebarHeader.vue";
-import { inject, computed, type Ref } from "vue";
-import type { FormElement } from '@/types/form';
+
 import {Checkbox} from "@/components/ui/checkbox";
 
-// Inject previewForm and selectedElementId from parent
-const previewForm = inject('previewForm') as Ref<FormElement[]>;
-const selectedElementId = inject('selectedElementId') as Ref<string | null>;
+import { useFormBuilderStore } from '@/stores/FormBuilderStore'
 
-// Compute the selected element based on selectedElementId
-const selectedElement = computed(() => {
-  if (!selectedElementId.value) return null;
-  return previewForm.value.find((element: FormElement) => element.id === selectedElementId.value) || null;
-});
+const store = useFormBuilderStore()
 
-// Update label or placeholder reactively
-const updateElementProperty = (property: 'label' | 'placeholder' | 'required' | 'options', value: string | boolean | string[]) => {
-  if (selectedElement.value) {
-    const index = previewForm.value.findIndex((e: FormElement) => e.id === selectedElementId.value);
-    if (index !== -1) {
-      previewForm.value[index] = { ...previewForm.value[index], [property]: value };
-    }
-  }
-};
+import { useEditableList } from '@/composables/useEditableList'
 
-// Handle required checkbox toggle
-const updateRequired = (checked: boolean | 'indeterminate') => {
-  const booleanValue = checked === true;
-  updateElementProperty('required', booleanValue);
-};
-
-// Handle option updates for select elements
-const updateOption = (optionIndex: number, newValue: string | number) => {
-  if (selectedElement.value && selectedElement.value.options) {
-    const updatedOptions = [...selectedElement.value.options];
-    
-    updatedOptions[optionIndex] = String(newValue);
-    updateElementProperty('options', updatedOptions);
-  }
-};
+// // Handle option updates for select elements
+// Use the composable - pass in how to save values
+const { startEditing, updateEditingValue, finishEditing, getDisplayValue } = 
+  useEditableList((index, value) => store.updateOption(index, value))
 </script>
 
 <template>
@@ -61,7 +35,7 @@ const updateOption = (optionIndex: number, newValue: string | number) => {
       <span>Properties</span>
     </SidebarHeader>
     <SidebarContent>
-      <div v-if="!selectedElement" class="p-4 text-gray-500">
+      <div v-if="!store.selectedElement" class="p-4 text-gray-500">
         Select a form element to edit its properties
       </div>
       <template v-else>
@@ -72,8 +46,8 @@ const updateOption = (optionIndex: number, newValue: string | number) => {
               <SidebarMenuItem>
                 <Input
                   class="border-gray-400"
-                  :value="selectedElement.label"
-                  @input="updateElementProperty('label', $event.target.value)"
+                  :value="store.selectedElement.label"
+                  @input="store.updateElementProperty(store.selectedElementId,'label', $event.target.value)"
                   placeholder="Enter label"
                 />
               </SidebarMenuItem>
@@ -87,8 +61,8 @@ const updateOption = (optionIndex: number, newValue: string | number) => {
               <SidebarMenuItem>
                 <Input
                   class="border-gray-400"
-                  :value="selectedElement.placeholder"
-                  @input="updateElementProperty('placeholder', $event.target.value)"
+                  :value="store.selectedElement.placeholder"
+                  @input="store.updateElementProperty(store.selectedElementId,'placeholder', $event.target.value)"
                   placeholder="Enter placeholder"
                 />
               </SidebarMenuItem>
@@ -103,8 +77,8 @@ const updateOption = (optionIndex: number, newValue: string | number) => {
                 <div class="p-2 flex items-center space-x-2">
                   <Checkbox
                     class=" border-gray-400"
-                    :model-value="selectedElement.required"
-                    @update:model-value="updateRequired"
+                    :model-value="store.selectedElement.required"
+                    @update:model-value="store.updateElementProperty(store.selectedElementId,'required', $event)"
                   />
                   <span>This field can't be empty</span> 
                 </div>
@@ -112,21 +86,31 @@ const updateOption = (optionIndex: number, newValue: string | number) => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup v-if="selectedElement?.type === 'select'" :key="`options-group-${selectedElement.id}`">
+        <SidebarGroup v-if="store.selectedElement?.type === 'select'">
+          <div class="flex flex-row gap-2">
           <SidebarGroupLabel>Dropdown options</SidebarGroupLabel>
+          <button class="cursor-pointer" @click="store.addOption()"><Plus class="w-4 h-4" /></button>
+          </div>
           <SidebarGroupContent>
-            <SidebarMenu :key="`options-menu-${selectedElement.id}`">
-              <SidebarMenuItem 
-                v-for="(option, index) in selectedElement.options ?? []" 
-                :key="`${selectedElement.id}-option-${index}-${option}`"
-              >
-                <div class="flex items-center space-x-2">
-                  <Input
-                    class="border-gray-400 flex-1"
-                    :model-value="option"
-                    @update:model-value="updateOption(index, $event)"
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <div class="space-y-2">
+                  <div 
+                    v-for="(option, index) in store.selectedElement.options ?? []"
+                    :key="`row-${store.selectedElement.id}-${index}`"
+                    class="flex flex-row gap-2 items-center"
+                  >
+                  <Input 
+                    
+                    class="border-gray-400"
+                    :model-value="getDisplayValue(index, option)"
+                    @focus="startEditing(index, option)"
+                    @blur="finishEditing(index)"
+                    @update:model-value="updateEditingValue(index, $event)"
                     :placeholder="`Option ${index + 1}`"
                   />
+                  <button class="cursor-pointer text-red-400 hover:text-red-600"  @click="store.removeOption(index)"><X class="w-4 h-4" /></button>
+                  </div>
                 </div>
               </SidebarMenuItem>
             </SidebarMenu>
