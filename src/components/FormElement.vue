@@ -18,9 +18,11 @@ const props = defineProps<Props>();
 
 const isSelected = computed(() => store.selectedElementId === props.element.id)
 
-// Helper to determine if element should use inline layout (like checkbox)
-const isInlineElement = computed(() => {
-  return ['checkbox'].includes(props.element.type)
+
+
+// Helper to determine if element should use group layout (like checkbox-group)
+const isGroupElement = computed(() => {
+  return ['checkbox-group'].includes(props.element.type)
 })
 
 // Determine which component to render based on element type
@@ -52,9 +54,10 @@ const elementConfig = computed(() => {
           class: 'border border-gray-300 rounded-md p-2'
         }
       }
-    case 'checkbox':
+    
+    case 'checkbox-group':
       return {
-        component: Checkbox,
+        component: 'div', // We'll handle this with custom template
         props: baseProps
       }
     default:
@@ -77,16 +80,25 @@ const elementConfig = computed(() => {
   >
     <!-- Conditional layout based on element type -->
     
-    <!-- Inline layout for checkbox, radio, etc. -->
-    <div v-if="isInlineElement" class="flex items-center gap-3 w-8/10">
-      <component
-        :is="elementConfig.component"
-        v-bind="elementConfig.props"
-      />
-      <label class="font-medium cursor-pointer" @click.stop="() => {}">
-        {{ element.label }}
-      </label>
+    <!-- Group layout for checkbox-group, radio-group, etc. -->
+    <div v-if="isGroupElement" class="flex flex-col w-8/10">
+      <label class="block font-medium mb-1">{{ element.label }}</label>
+      <div v-if="element.groupTitle" class="text-sm text-gray-600 mb-2">
+        {{ element.groupTitle }}
+      </div>
+      <div class="space-y-2">
+        <div 
+          v-for="(option, index) in element.options || []" 
+          :key="`${element.id}-option-${index}`"
+          class="flex items-center gap-2"
+        >
+          <Checkbox />
+          <span class="text-sm">{{ option }}</span>
+        </div>
+      </div>
     </div>
+    
+    
     
     <!-- Block layout for input, textarea, select, etc. -->
     <div v-else class="flex flex-col items-start w-8/10">

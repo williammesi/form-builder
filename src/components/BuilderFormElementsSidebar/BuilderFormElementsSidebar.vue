@@ -24,7 +24,7 @@ import {
   InputElementPreview, 
   SelectElementPreview ,
   TextareaElementPreview,
-  CheckboxElementPreview
+  CheckboxGroupElementPreview
 } from '@/components/BuilderFormElementsSidebar';
 
 const store = useFormBuilderStore();
@@ -39,7 +39,8 @@ const iconMap: Record<string, FunctionalComponent> = {
   'input': TextCursorInput,
   'select': BetweenHorizontalStart,
   'textarea': Scan,
-  'checkbox': Check,
+  
+  'checkbox-group': Check,
 };
 
 // Map element types to their preview components
@@ -51,7 +52,8 @@ const componentMap: Record<string, Component> = {
   'input': InputElementPreview,
   'select': SelectElementPreview,
   'textarea': TextareaElementPreview,
-  'checkbox': CheckboxElementPreview,
+  'checkbox-group': CheckboxGroupElementPreview,
+
 };
 
 // Element templates
@@ -82,11 +84,12 @@ const elementTemplates: ElementTemplate[] = [
     required: false,
     rows: 3
   },
+
   {
-    type: 'checkbox',
+    type: 'checkbox-group',
     label: 'Checkbox',
-    placeholder: 'Check me',
-    required: false
+    required: false,
+    options: ["Option 1", "Option 2", "Option 3"]
   }
 ];
 

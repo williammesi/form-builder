@@ -1,4 +1,3 @@
-
 <!-- components/BuilderFormElementsPropertiesSidebar/ElementPropertiesWrapper.vue -->
 <script setup lang="ts">
 import {
@@ -19,31 +18,62 @@ import { useFormBuilderStore } from '@/stores/FormBuilderStore';
 import InputElementProperties from './InputElementProperties.vue';
 import SelectElementProperties from './SelectElementProperties.vue';
 import TextareaElementProperties from './TextareaElementProperties.vue';
+import CheckboxGroupElementProperties from './CheckboxGroupElementProperties.vue';
 
 interface Props {
   element: FormElement;
 }
 
-defineProps<Props>();
-
+const props = defineProps<Props>();
 const store = useFormBuilderStore();
 
-// Component mapping for element-specific properties
-const specificPropertiesMap: Record<string, Component> = {
-  'input': InputElementProperties,
-  'select': SelectElementProperties,
-'textarea': TextareaElementProperties,
+// 🆕 Define which properties each element type supports
+const elementPropertyConfig = {
+  'input': {
+    showLabel: true,
+    showPlaceholder: true,
+    showRequired: true,
+    specificComponent: InputElementProperties
+  },
+  'textarea': {
+    showLabel: true,
+    showPlaceholder: true,
+    showRequired: true,
+    specificComponent: TextareaElementProperties
+  },
+  'select': {
+    showLabel: true,
+    showPlaceholder: true,
+    showRequired: true,
+    specificComponent: SelectElementProperties
+  },
+  'checkbox-group': {
+    showLabel: true,
+    showPlaceholder: false, // 
+    showRequired: true,
+    specificComponent: CheckboxGroupElementProperties
+  }
 };
 
+//  Get the configuration for the current element type
+const currentConfig = computed(() => {
+  return elementPropertyConfig[props.element.type as keyof typeof elementPropertyConfig] || {
+    showLabel: true,
+    showPlaceholder: true,
+    showRequired: true,
+    specificComponent: null
+  };
+});
+
 // Get the specific properties component for the current element type
-const getSpecificPropertiesComponent = computed(() => (elementType: string) => {
-  return specificPropertiesMap[elementType] || null;
+const getSpecificPropertiesComponent = computed(() => {
+  return currentConfig.value.specificComponent || null;
 });
 </script>
 
 <template>
-  <!-- Common Properties (Label, Placeholder, Required) -->
-  <SidebarGroup>
+  <!-- Label Property (shown for all elements) -->
+  <SidebarGroup v-if="currentConfig.showLabel">
     <SidebarGroupLabel>Label</SidebarGroupLabel>
     <SidebarGroupContent>
       <SidebarMenu>
@@ -59,7 +89,8 @@ const getSpecificPropertiesComponent = computed(() => (elementType: string) => {
     </SidebarGroupContent>
   </SidebarGroup>
 
-  <SidebarGroup>
+  <!-- Placeholder Property (conditionally shown) -->
+  <SidebarGroup v-if="currentConfig.showPlaceholder">
     <SidebarGroupLabel>Placeholder</SidebarGroupLabel>
     <SidebarGroupContent>
       <SidebarMenu>
@@ -75,7 +106,8 @@ const getSpecificPropertiesComponent = computed(() => (elementType: string) => {
     </SidebarGroupContent>
   </SidebarGroup>
 
-  <SidebarGroup>
+  <!-- Required Property (shown for most elements) -->
+  <SidebarGroup v-if="currentConfig.showRequired">
     <SidebarGroupLabel>Required</SidebarGroupLabel>
     <SidebarGroupContent>
       <SidebarMenu>
@@ -95,8 +127,8 @@ const getSpecificPropertiesComponent = computed(() => (elementType: string) => {
 
   <!-- Element-Specific Properties -->
   <component 
-    v-if="getSpecificPropertiesComponent(element.type)"
-    :is="getSpecificPropertiesComponent(element.type)"
+    v-if="getSpecificPropertiesComponent"
+    :is="getSpecificPropertiesComponent"
     :element="element"
   />
 </template>
