@@ -1,8 +1,6 @@
-
-
-
-<!-- components/BuilderFormElementsPropertiesSidebar/ElementPropertiesWrapper.vue -->
+<!-- components/BuilderFormElementsPropertiesSidebar/SelectElementProperties.vue -->
 <script setup lang="ts">
+import { Plus, X } from "lucide-vue-next";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,12 +8,10 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-import type { FormElement } from '@/types/form';
-
-import { useFormBuilderStore } from '@/stores/FormBuilderStore';
 import { Input } from "@/components/ui/input";
- 
+import type { FormElement } from '@/types/form';
+import { useFormBuilderStore } from '@/stores/FormBuilderStore';
+import { useEditableList } from '@/composables/useEditableList';
 
 interface Props {
   element: FormElement;
@@ -25,43 +21,50 @@ defineProps<Props>();
 
 const store = useFormBuilderStore();
 
-import { useEditableList } from '@/composables/useEditableList'
-
-// // Handle option updates for select elements
-// Use the composable - pass in how to save values
+// Handle option updates for select elements
 const { startEditing, updateEditingValue, finishEditing, getDisplayValue } = 
-  useEditableList((index, value) => store.updateOption(index, value))
+  useEditableList((index, value) => store.updateOption(index, value));
 </script>
 
 <template>
   <SidebarGroup>
-    <div class="flex flex-row gap-2">
-    <SidebarGroupLabel>Dropdown options</SidebarGroupLabel>
-    <button class="cursor-pointer" @click="store.addOption()"><Plus class="w-4 h-4" /></button>
+    <div class="flex flex-row gap-2 items-center">
+      <SidebarGroupLabel>Dropdown options</SidebarGroupLabel>
+      <button 
+        class="cursor-pointer hover:bg-gray-100 p-1 rounded" 
+        @click="store.addOption()"
+        title="Add option"
+      >
+        <Plus class="w-4 h-4" />
+      </button>
     </div>
     <SidebarGroupContent>
-    <SidebarMenu>
+      <SidebarMenu>
         <SidebarMenuItem>
-        <div class="space-y-2">
+          <div class="space-y-2">
             <div 
-            v-for="(option, index) in element.options ?? []"
-            :key="`row-${element.id}-${index}`"
-            class="flex flex-row gap-2 items-center"
+              v-for="(option, index) in element.options ?? []"
+              :key="`row-${element.id}-${index}`"
+              class="flex flex-row gap-2 items-center"
             >
-            <Input 
-            
-            class="border-gray-400"
-            :model-value="getDisplayValue(index, option)"
-            @focus="startEditing(index, option)"
-            @blur="finishEditing(index)"
-            @update:model-value="updateEditingValue(index, $event)"
-            :placeholder="`Option ${index + 1}`"
-            />
-            <button class="cursor-pointer text-red-400 hover:text-red-600"  @click="store.removeOption(index)"><X class="w-4 h-4" /></button>
+              <Input 
+                class="border-gray-400"
+                :model-value="getDisplayValue(index, option)"
+                @focus="startEditing(index, option)"
+                @blur="finishEditing(index)"
+                @update:model-value="updateEditingValue(index, $event)"
+                :placeholder="`Option ${index + 1}`"
+              />
+              <button 
+                class="cursor-pointer text-red-400 hover:text-red-600"  
+                @click="store.removeOption(index)"
+              >
+                <X class="w-4 h-4" />
+              </button>
             </div>
-        </div>
+          </div>
         </SidebarMenuItem>
-    </SidebarMenu>
+      </SidebarMenu>
     </SidebarGroupContent>
-    </SidebarGroup>
+  </SidebarGroup>
 </template>

@@ -2,6 +2,7 @@
 import { GripHorizontal, Trash } from 'lucide-vue-next';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import type { FormElement } from '@/types/form';
 import { computed } from 'vue';
 import { useFormBuilderStore } from '@/stores/FormBuilderStore'
@@ -37,6 +38,15 @@ const elementConfig = computed(() => {
       return {
         component: Select,
         props: baseProps
+      }
+    case 'textarea':
+      return {
+        component: Textarea,
+        props: {
+          ...baseProps,
+          rows: props.element.rows || 3,
+          class: 'border border-gray-300 rounded-md p-2'
+        }
       }
     default:
       return {

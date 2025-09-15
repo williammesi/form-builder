@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TextCursorInput, BetweenHorizontalStart } from "lucide-vue-next";
+import { TextCursorInput, BetweenHorizontalStart, Scan } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -22,7 +22,8 @@ import { computed } from 'vue';
 import { 
   ElementPreview, 
   InputElementPreview, 
-  SelectElementPreview 
+  SelectElementPreview ,
+  TextareaElementPreview
 } from '@/components/BuilderFormElementsSidebar';
 
 const store = useFormBuilderStore();
@@ -36,6 +37,7 @@ const store = useFormBuilderStore();
 const iconMap: Record<string, FunctionalComponent> = {
   'input': TextCursorInput,
   'select': BetweenHorizontalStart,
+  'textarea': Scan,
 };
 
 // Map element types to their preview components
@@ -46,6 +48,7 @@ const iconMap: Record<string, FunctionalComponent> = {
 const componentMap: Record<string, Component> = {
   'input': InputElementPreview,
   'select': SelectElementPreview,
+  'textarea': TextareaElementPreview,
 };
 
 // Element templates
@@ -69,6 +72,13 @@ const elementTemplates: ElementTemplate[] = [
     required: true,
     options: ["option1", "option2", "option3"]
   },
+  {
+    type: 'textarea',
+    label: 'Text Area',
+    placeholder: 'Enter multiple lines of text',
+    required: false,
+    rows: 3
+  }
 ];
 
 // Computed property to get the preview component based on element type

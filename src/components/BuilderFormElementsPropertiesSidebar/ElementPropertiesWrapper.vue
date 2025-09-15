@@ -18,6 +18,7 @@ import { useFormBuilderStore } from '@/stores/FormBuilderStore';
 // Import specific property components
 import InputElementProperties from './InputElementProperties.vue';
 import SelectElementProperties from './SelectElementProperties.vue';
+import TextareaElementProperties from './TextareaElementProperties.vue';
 
 interface Props {
   element: FormElement;
@@ -31,6 +32,7 @@ const store = useFormBuilderStore();
 const specificPropertiesMap: Record<string, Component> = {
   'input': InputElementProperties,
   'select': SelectElementProperties,
+'textarea': TextareaElementProperties,
 };
 
 // Get the specific properties component for the current element type
