@@ -44,11 +44,36 @@ const addElement = (template: ElementTemplate) => {
    }
 // Update a property of the selected form element
 const updateSelectedElementProperty = (property: string, value: any) => {
-  if (!selectedElement.value) return; // Guard clause for safety
+  if (!selectedElement.value) return;
   
   const element = elements.value.find(el => el.id === selectedElement.value!.id)
-  if (element) {
-    (element as any)[property] = value
+  if (!element) return;
+  
+  // Update the property
+  (element as any)[property] = value
+  
+  // Handle cascading updates when inputType changes
+  if (property === 'inputType' && element.type === 'input') {
+    updateLabelAndPlaceholderForInputType(element, value)
+  }
+}
+
+// Helper function to update label and placeholder based on inputType
+const updateLabelAndPlaceholderForInputType = (element: FormElementType, inputType: string) => {
+  switch (inputType) {
+    case 'email':
+      element.label = 'Email Field'
+      element.placeholder = 'Enter your email'
+      break
+    case 'password':
+      element.label = 'Password Field'
+      element.placeholder = 'Enter your password'
+      break
+    case 'text':
+    default:
+      element.label = 'Text Input'
+      element.placeholder = 'Enter text'
+      break
   }
 }
 

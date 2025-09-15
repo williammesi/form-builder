@@ -29,16 +29,9 @@ const iconMap: Record<string, FunctionalComponent> = {
 const elementTemplates: ElementTemplate[] = [
   {
     type: 'input',
-    label: 'Text Input',
+    label: 'Input field' ,
     placeholder: 'Enter text',
     inputType: 'text',
-    required: true,
-  },
-  {
-    type: 'input',
-    label: 'Email Field',
-    placeholder: 'Enter email',
-    inputType: 'email',
     required: true,
   },
   {

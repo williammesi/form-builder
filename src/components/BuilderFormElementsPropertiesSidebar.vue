@@ -13,7 +13,7 @@ import {
   Input,
 } from "@/components/ui/input"
 import SidebarHeader from "@/components/ui/sidebar/SidebarHeader.vue";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {Checkbox} from "@/components/ui/checkbox";
 
 import { useFormBuilderStore } from '@/stores/FormBuilderStore'
@@ -112,6 +112,28 @@ const { startEditing, updateEditingValue, finishEditing, getDisplayValue } =
                   <button class="cursor-pointer text-red-400 hover:text-red-600"  @click="store.removeOption(index)"><X class="w-4 h-4" /></button>
                   </div>
                 </div>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup v-if="store.selectedElement?.type === 'input'">
+          <SidebarGroupLabel>Input Type</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Select 
+                  :model-value="store.selectedElement.inputType || 'text'"
+                  @update:model-value="store.updateSelectedElementProperty('inputType', $event)"
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select input type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Text</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="password">Password</SelectItem>
+                  </SelectContent>
+                </Select>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
