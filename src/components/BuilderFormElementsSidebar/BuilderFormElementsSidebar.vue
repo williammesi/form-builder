@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TextCursorInput, BetweenHorizontalStart, Scan } from "lucide-vue-next";
+import { TextCursorInput, BetweenHorizontalStart, Scan, Check } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +23,8 @@ import {
   ElementPreview, 
   InputElementPreview, 
   SelectElementPreview ,
-  TextareaElementPreview
+  TextareaElementPreview,
+  CheckboxElementPreview
 } from '@/components/BuilderFormElementsSidebar';
 
 const store = useFormBuilderStore();
@@ -38,6 +39,7 @@ const iconMap: Record<string, FunctionalComponent> = {
   'input': TextCursorInput,
   'select': BetweenHorizontalStart,
   'textarea': Scan,
+  'checkbox': Check,
 };
 
 // Map element types to their preview components
@@ -49,6 +51,7 @@ const componentMap: Record<string, Component> = {
   'input': InputElementPreview,
   'select': SelectElementPreview,
   'textarea': TextareaElementPreview,
+  'checkbox': CheckboxElementPreview,
 };
 
 // Element templates
@@ -78,6 +81,12 @@ const elementTemplates: ElementTemplate[] = [
     placeholder: 'Enter multiple lines of text',
     required: false,
     rows: 3
+  },
+  {
+    type: 'checkbox',
+    label: 'Checkbox',
+    placeholder: 'Check me',
+    required: false
   }
 ];
 
@@ -131,7 +140,7 @@ const handleClone = (item: ElementTemplate): FormElement => {
                     <!-- Element preview, default wrapper -->
                     <ElementPreview
                       :element="element"
-                      :icon="getIcon(element.label)"
+                      :icon="getIcon(element.type)"
                       @click="handleClick"
                     >
                       <!-- Dynamic component based on type -->

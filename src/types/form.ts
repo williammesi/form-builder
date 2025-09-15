@@ -1,7 +1,7 @@
 // Interface for form elements
 export interface FormElement {
   id: string; // Unique ID for stable rendering and drag-and-drop
-  type: 'input' | 'select' | 'textarea'; // Supported form types
+  type: 'input' | 'select' | 'textarea' | 'checkbox'; // Supported form types
   label: string; // Display label
   placeholder?: string; // Optional placeholder for inputs
   options?: string[]; // Options for select type
