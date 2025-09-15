@@ -8,3 +8,13 @@ export interface FormElement {
   required: boolean; // Is the field required
   inputType?: 'text' | 'email'; // Input type for input fields (default: 'text')
 }
+
+export type ElementTemplate = Omit<FormElement, 'id'>
+
+export interface FormMetadata {
+  title: string;
+  description: string;
+  uuid: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
