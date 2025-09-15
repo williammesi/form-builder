@@ -17,43 +17,54 @@ const isSelected = computed(() => store.selectedElementId === props.element.id)
 const props = defineProps<Props>();
 
 
-const getComponent = (type: FormElement['type']) => {
-  switch (type) {
-    case 'input':
-      return Input;
-    case 'select':
-      return Select;
-    default:
-      return 'div';
+// Determine which component to render based on element type
+// and prepare its props accordingly
+
+const elementConfig = computed(() => {
+  const baseProps = {
+    placeholder: props.element.placeholder
   }
-};
+  
+  switch (props.element.type) {
+    case 'input':
+      return {
+        component: Input,
+        props: {
+          ...baseProps,
+          type: props.element.inputType || 'text'
+        }
+      }
+    case 'select':
+      return {
+        component: Select,
+        props: baseProps
+      }
+    default:
+      return {
+        component: 'div',
+        props: baseProps
+      }
+  }
+})
 
-const handleSelect = () => {
-  store.selectElement(props.element.id);
-};
-
-const handleDelete = () => {
-  store.removeElement(props.element.id);
-};
 </script>
 
 <template>
   <div
     class="mb-4 w-full flex gap-2 flex-row border-gray-200 border-0 p-4 rounded-lg form-element-item"
     :class="{ 'border-2 border-blue-500': isSelected }"
-    @click="handleSelect"
+    @click="store.selectElement(props.element.id);
+"
     role="button"
     tabindex="0"
-    @keydown.enter="handleSelect"
+    @keydown.enter="store.selectElement(props.element.id);
+"
   >
     <div class="flex flex-col items-start w-8/10">
       <label class="block font-medium mb-1">{{ element.label }}</label>
       <component
-        :is="getComponent(element.type)"
-        v-bind="{
-          placeholder: element.placeholder,
-          ...(element.type === 'input' ? { type: element.inputType || 'text' } : {}),
-        }"
+        :is="elementConfig.component"
+        v-bind="elementConfig.props"
         class="w-full"
       >
         <template v-if="element.type === 'select'">

@@ -47,8 +47,8 @@ const { startEditing, updateEditingValue, finishEditing, getDisplayValue } =
                 <Input
                   class="border-gray-400"
                   :value="store.selectedElement.label"
-                  @input="store.updateElementProperty(store.selectedElementId,'label', $event.target.value)"
                   placeholder="Enter label"
+                  @input="store.updateSelectedElementProperty('label', $event.target.value)"
                 />
               </SidebarMenuItem>
             </SidebarMenu>
@@ -62,7 +62,7 @@ const { startEditing, updateEditingValue, finishEditing, getDisplayValue } =
                 <Input
                   class="border-gray-400"
                   :value="store.selectedElement.placeholder"
-                  @input="store.updateElementProperty(store.selectedElementId,'placeholder', $event.target.value)"
+                  @input="store.updateSelectedElementProperty('placeholder', $event.target.value)"
                   placeholder="Enter placeholder"
                 />
               </SidebarMenuItem>
@@ -78,7 +78,7 @@ const { startEditing, updateEditingValue, finishEditing, getDisplayValue } =
                   <Checkbox
                     class=" border-gray-400"
                     :model-value="store.selectedElement.required"
-                    @update:model-value="store.updateElementProperty(store.selectedElementId,'required', $event)"
+                    @update:model-value="store.updateSelectedElementProperty('required', $event)"
                   />
                   <span>This field can't be empty</span> 
                 </div>
