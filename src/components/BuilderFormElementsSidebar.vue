@@ -65,7 +65,7 @@ const handleClone = (item: ElementTemplate): FormElement => {
   return newElement
 };
 
-// Add this helper function here
+// return input type or default to 'text' for Input fields
 const getInputType = (element: ElementTemplate) => {
   return element.inputType || 'text'
 }

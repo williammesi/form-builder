@@ -104,7 +104,7 @@ const removeOption = (optionIndex: number) => {
     addElement,
     removeElement,
     selectElement,
-    updateElementProperty,
+    updateSelectedElementProperty,
     updateOption,
     addOption,
     removeOption
