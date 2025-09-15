@@ -9,7 +9,6 @@ const store = useFormBuilderStore()
 
 interface Props {
   element: FormElement;
-  
 }
 
 const isSelected = computed(() => store.selectedElementId === props.element.id)
@@ -87,7 +86,7 @@ const elementConfig = computed(() => {
     <div class="flex flex-row px-4 items-center gap-2 w-2/10 justify-center">
       <button
         class="p-2 rounded-lg bg-red-400 hover:bg-red-500 cursor-pointer"
-        @click.stop="handleDelete"
+        @click.stop="store.removeElement(props.element.id);"
       >
         <Trash class="w-5 h-5 text-gray-50 cursor-pointer" />
       </button>
