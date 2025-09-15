@@ -3,19 +3,19 @@ import { GripHorizontal, Trash } from 'lucide-vue-next';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { FormElement } from '@/types/form';
+import { computed } from 'vue';
+import { useFormBuilderStore } from '@/stores/FormBuilderStore'
+const store = useFormBuilderStore()
 
 interface Props {
   element: FormElement;
-  isSelected: boolean;
+  
 }
 
-interface Emits {
-  select: [elementId: string];
-  delete: [elementId: string];
-}
+const isSelected = computed(() => store.selectedElementId === props.element.id)
 
 const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+
 
 const getComponent = (type: FormElement['type']) => {
   switch (type) {
@@ -29,11 +29,11 @@ const getComponent = (type: FormElement['type']) => {
 };
 
 const handleSelect = () => {
-  emit('select', props.element.id);
+  store.selectElement(props.element.id);
 };
 
 const handleDelete = () => {
-  emit('delete', props.element.id);
+  store.removeElement(props.element.id);
 };
 </script>
 
