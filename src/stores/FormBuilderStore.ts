@@ -29,21 +29,24 @@ const addElement = (template: ElementTemplate) => {
   }
   elements.value.push(newElement)
   selectedElementId.value = newElement.id
-    return newElement
+    
 }
 
   const removeElement = (id: string) => { 
     elements.value = elements.value.filter(el => el.id !== id)
+    if (selectedElementId.value !== null && selectedElementId.value === id) {
+      selectedElementId.value = null
+    }
    }
 
   const selectElement = (id: string | null) => { 
     selectedElementId.value = id
    }
-// Update a property of a form element by ID
-const updateElementProperty = (id: string | null, property: string, value: any) => {
-  if (!id) return; // Early return if no ID
+// Update a property of the selected form element
+const updateSelectedElementProperty = (property: string, value: any) => {
+  if (!selectedElement.value) return; // Guard clause for safety
   
-  const element = elements.value.find(el => el.id === id)
+  const element = elements.value.find(el => el.id === selectedElement.value!.id)
   if (element) {
     (element as any)[property] = value
   }
