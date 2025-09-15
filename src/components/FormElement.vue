@@ -51,7 +51,7 @@ const elementConfig = computed(() => {
         props: {
           ...baseProps,
           rows: props.element.rows || 3,
-          class: 'border border-gray-300 rounded-md p-2'
+          class: 'border border-gray-300 rounded-md p-2 resize-none'
         }
       }
     

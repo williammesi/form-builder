@@ -46,6 +46,7 @@ const store = useFormBuilderStore();
                     <SelectItem value="text">Text</SelectItem>
                     <SelectItem value="email">Email</SelectItem>
                     <SelectItem value="password">Password</SelectItem>
+                    <SelectItem value="number">Number</SelectItem>
                   </SelectContent>
                 </Select>
               </SidebarMenuItem>

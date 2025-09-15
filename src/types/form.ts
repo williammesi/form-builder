@@ -6,7 +6,7 @@ export interface FormElement {
   placeholder?: string; // Optional placeholder for inputs
   options?: string[]; // Options for select type
   required: boolean; // Is the field required
-  inputType?: 'text' | 'email' | 'password'; // Input type for input fields (default: 'text')
+  inputType?: 'text' | 'email' | 'password' | 'number'; // Input type for input fields (default: 'text')
   rows?: number; // Number of rows for textarea
 
   groupTitle?: string; // Title for checkbox-group

@@ -66,6 +66,10 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
         element.label = 'Password Field'
         element.placeholder = 'Enter your password'
         break
+      case 'number':
+        element.label = 'Number Field'
+        element.placeholder = 'Enter a number'
+        break
       case 'text':
       default:
         element.label = 'Text Input'
