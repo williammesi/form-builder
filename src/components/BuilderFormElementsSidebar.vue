@@ -11,29 +11,27 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import type { FormElement } from '@/types/form';
+import type { FormElement, ElementTemplate } from '@/types/form';
 import type { FunctionalComponent } from 'vue';
-import { v4 as uuidv4 } from 'uuid';
 import Draggable from 'vuedraggable';
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { v4 as uuidv4 } from 'uuid';
+import { useFormBuilderStore } from '@/stores/FormBuilderStore'
 
-interface SidebarFormElement extends Omit<FormElement, 'id'> {
-  icon: FunctionalComponent;
+const store = useFormBuilderStore()
+const iconMap: Record<string, FunctionalComponent> = {
+  'Text Input': TextCursorInput,
+  'Email Field': Mail,
+  'Select Dropdown': BetweenHorizontalStart,
 }
 
-const emit = defineEmits<{
-  addElement: [payload: FormElement];
-  selectElement: [elementId: string];
-}>();
-
-const items: SidebarFormElement[] = [
+const elementTemplates: ElementTemplate[] = [
   {
     type: 'input',
     label: 'Text Input',
     placeholder: 'Enter text',
     inputType: 'text',
-    icon: TextCursorInput,
     required: true,
   },
   {
@@ -41,61 +39,38 @@ const items: SidebarFormElement[] = [
     label: 'Email Field',
     placeholder: 'Enter email',
     inputType: 'email',
-    icon: Mail,
     required: true,
   },
   {
     type: 'select',
     label: 'Select Dropdown',
     placeholder: 'Select an option',
-    icon: BetweenHorizontalStart,
     required: true,
-    options: ["option1","option2","option3"]
+    options: ["option1", "option2", "option3"]
   },
 ];
 
-const createFormElement = (item: SidebarFormElement): FormElement => {
-  const baseElement = {
+const getIcon = (label: string) => iconMap[label]
+
+const handleClick = (item: ElementTemplate) => {
+  store.addElement(item)
+}
+
+const handleClone = (item: ElementTemplate): FormElement => {
+  // Only create element data for dragging
+  const newElement: FormElement = {
     id: uuidv4(),
-    type: item.type,
-    label: item.label,
-    placeholder: item.placeholder,
-    required: true,
-  };
-
-  // Add type-specific properties with proper cloning
-  if (item.type === 'input') {
-    return {
-      ...baseElement,
-      inputType: item.inputType,
-    };
-  } else if (item.type === 'select') {
-    return {
-      ...baseElement,
-      // Create a new array instance to avoid shared references
-      options: item.options ? [...item.options] : [],
-    };
+    ...item
   }
-
-  return baseElement;
+  return newElement
 };
 
-const handleClick = (item: SidebarFormElement) => {
-  console.log('Clicked item:', item);
-  const newElement = createFormElement(item);
-  emit('addElement', newElement);
-  // Emit a new event to select the element after adding
-  emit('selectElement', newElement.id);
-};
+// Add this helper function here
+const getInputType = (element: ElementTemplate) => {
+  return element.inputType || 'text'
+}
 
-const handleClone = (item: SidebarFormElement): FormElement => {
-  console.log('Cloning item:', item);
-  return createFormElement(item);
-};
 
-const onDragStart = (event: DragEvent) => {
-  console.log('Drag started from sidebar:', event);
-};
 </script>
 
 <template>
@@ -110,32 +85,33 @@ const onDragStart = (event: DragEvent) => {
         <SidebarGroupContent>
           <SidebarMenu>
             <Draggable
-              :list="items"
+              :list="elementTemplates"
               :group="{ name: 'form-elements', pull: 'clone', put: false }"
               :clone="handleClone"
               item-key="label"
               tag="div"
               :sort="false"
-              @start="onDragStart"
+              
             >
               <template #item="{ element }">
                 <SidebarMenuItem>
                   <SidebarMenuButton as-child>
                     <button
                       class="flex flex-col h-25 items-center w-full mb-2 text-left cursor-move border-2 border-gray-200"
+                      
                       @click.stop="handleClick(element)"
                       draggable="true"
                       :aria-label="`Drag or click to add ${element.label}`"
                     >
                       <div class="flex items-center w-full">
-                        <component :is="element.icon" class="w-5 h-5 mr-2" />
+                        <component :is="getIcon(element.label)" class="w-5 h-5 mr-2" />
                         <span>{{ element.label }}</span>
                       </div>
                       <div class="flex items-center justify-center w-full">
                         <!-- Render Input Preview -->
                         <Input
                           v-if="element.type === 'input'"
-                          :type="element.label.includes('Email') ? 'email' : element.label.includes('Phone') ? 'tel' : 'text'"
+                          :type="getInputType(element)"
                           :placeholder="element.placeholder"
                           disabled
                           class="w-full cursor-move"
