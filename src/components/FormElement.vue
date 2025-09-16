@@ -22,7 +22,7 @@ const isSelected = computed(() => store.selectedElementId === props.element.id)
 
 // Helper to determine if element should use group layout (like checkbox-group)
 const isGroupElement = computed(() => {
-  return ['checkbox-group'].includes(props.element.type)
+  return ['checkbox-group', 'radio-group'].includes(props.element.type)
 })
 
 // Determine which component to render based on element type
@@ -57,7 +57,12 @@ const elementConfig = computed(() => {
     
     case 'checkbox-group':
       return {
-        component: 'div', // We'll handle this with custom template
+        component: 'div',
+        props: baseProps
+      }
+    case 'radio-group':
+      return {
+        component: 'div',
         props: baseProps
       }
     default:

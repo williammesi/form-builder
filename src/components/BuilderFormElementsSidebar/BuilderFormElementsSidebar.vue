@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TextCursorInput, BetweenHorizontalStart, Scan, Check } from "lucide-vue-next";
+import { TextCursorInput, BetweenHorizontalStart, Scan, Check, CircleDot } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -24,7 +24,8 @@ import {
   InputElementPreview, 
   SelectElementPreview ,
   TextareaElementPreview,
-  CheckboxGroupElementPreview
+  CheckboxGroupElementPreview,
+  RadioGroupElementPreview,
 } from '@/components/BuilderFormElementsSidebar';
 
 const store = useFormBuilderStore();
@@ -39,7 +40,7 @@ const iconMap: Record<string, FunctionalComponent> = {
   'input': TextCursorInput,
   'select': BetweenHorizontalStart,
   'textarea': Scan,
-  
+  'radio-group': CircleDot,
   'checkbox-group': Check,
 };
 
@@ -53,6 +54,7 @@ const componentMap: Record<string, Component> = {
   'select': SelectElementPreview,
   'textarea': TextareaElementPreview,
   'checkbox-group': CheckboxGroupElementPreview,
+  'radio-group': RadioGroupElementPreview,
 
 };
 
@@ -90,7 +92,14 @@ const elementTemplates: ElementTemplate[] = [
     label: 'Checkbox',
     required: false,
     options: ["Option 1", "Option 2", "Option 3"]
+  },
+  {
+    type: 'radio-group',
+    label: 'Radio Group',
+    required: false,
+    options: ["Option 1", "Option 2", "Option 3"]
   }
+
 ];
 
 // Computed property to get the preview component based on element type

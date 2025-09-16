@@ -78,16 +78,16 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
     }
   }
 
-  // 🆕 IMPROVED: Helper function to check if element supports options
+  //  Helper function to check if element supports options
   const elementSupportsOptions = (elementType: string): boolean => {
     return ['select', 'checkbox-group', 'radio-group'].includes(elementType)
   }
 
-  // 🆕 IMPROVED: Generic options management
+  //  Generic options management
   const updateOption = (optionIndex: number, newValue: string) => {
     if (!selectedElement.value) return;
     
-    // ✅ Now works for any element that supports options!
+    
     if (!elementSupportsOptions(selectedElement.value.type)) return;
     
     if (!selectedElement.value.options) return;
@@ -99,14 +99,14 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
   const addOption = () => {
     if (!selectedElement.value) return;
     
-    // ✅ Now works for any element that supports options!
+    // 
     if (!elementSupportsOptions(selectedElement.value.type)) return;
     
     if (!selectedElement.value.options) {
       selectedElement.value.options = []
     }
     
-    // 🆕 Smart default option names based on element type
+    // Smart default option names based on element type
     const defaultOptionName = getDefaultOptionName(selectedElement.value.type, selectedElement.value.options.length)
     selectedElement.value.options.push(defaultOptionName)
   }
@@ -114,13 +114,13 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
   const removeOption = (optionIndex: number) => {
     if (!selectedElement.value) return;
     
-    // ✅ Now works for any element that supports options!
+   
     if (!elementSupportsOptions(selectedElement.value.type)) return;
     
     if (!selectedElement.value.options) return;
     if (optionIndex < 0 || optionIndex >= selectedElement.value.options.length) return;
 
-    // 🆕 Different minimum requirements for different element types
+    // Different minimum requirements for different element types
     const minOptions = getMinimumOptionsForElement(selectedElement.value.type)
     if (selectedElement.value.options.length <= minOptions) {
       // Prevent removing below minimum
@@ -130,7 +130,7 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
     selectedElement.value.options.splice(optionIndex, 1)
   }
 
-  // 🆕 Helper function to get appropriate default option names
+  //  Helper function to get appropriate default option names
   const getDefaultOptionName = (elementType: string, currentCount: number): string => {
     switch (elementType) {
       case 'select':
@@ -144,7 +144,7 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
     }
   }
 
-  // 🆕 Helper function to get minimum options for each element type
+  //  Helper function to get minimum options for each element type
   const getMinimumOptionsForElement = (elementType: string): number => {
     switch (elementType) {
       case 'select':

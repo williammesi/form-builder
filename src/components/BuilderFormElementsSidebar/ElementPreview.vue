@@ -30,7 +30,7 @@ defineEmits<{
     </div>
     
     <!-- Slot for specific field preview -->
-    <div class="flex flex-col items-center justify-center w-full">
+    <div class="flex flex-col items-start justify-center w-full">
       <slot :element="element" />
     </div>
   </button>
