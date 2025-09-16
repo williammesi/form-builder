@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { FormElement } from '@/types/form';
-import type { Component } from 'vue';
 import { computed } from 'vue';
 import { useFormBuilderStore } from '@/stores/FormBuilderStore';
 
@@ -19,6 +18,7 @@ import InputElementProperties from './InputElementProperties.vue';
 import SelectElementProperties from './SelectElementProperties.vue';
 import TextareaElementProperties from './TextareaElementProperties.vue';
 import CheckboxGroupElementProperties from './CheckboxGroupElementProperties.vue';
+import RadioGroupElementProperties from './RadioGroupElementProperties.vue';
 
 interface Props {
   element: FormElement;
@@ -49,9 +49,15 @@ const elementPropertyConfig = {
   },
   'checkbox-group': {
     showLabel: true,
-    showPlaceholder: false, // 
+    showPlaceholder: false,
     showRequired: true,
     specificComponent: CheckboxGroupElementProperties
+  },
+  'radio-group': {
+    showLabel: true,
+    showPlaceholder: false,
+    showRequired: true,
+    specificComponent: RadioGroupElementProperties
   }
 };
 

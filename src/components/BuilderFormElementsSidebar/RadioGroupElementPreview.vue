@@ -1,7 +1,8 @@
-<!-- components/BuilderFormElementsSidebar/CheckboxGroupElementPreview.vue -->
+<!-- components/BuilderFormElementsSidebar/RadioGroupElementPreview.vue -->
 <script setup lang="ts">
 import type { ElementTemplate } from '@/types/form';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface Props {
   element: ElementTemplate;
@@ -11,14 +12,22 @@ defineProps<Props>();
 </script>
 
 <template>
- <RadioGroup  :disabled="true" default-value="option-one">
-    <div class="flex flex-row  space-x-2">
-      <RadioGroupItem class=" border border-gray-500 " id="option-one" value="option-one" />
-      <Label for="option-one">Option 1</Label>
+  <RadioGroup :disabled="true" default-value="option-one" class="space-y-2">
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem
+        class="border border-gray-500"
+        id="preview-radio-1"
+        value="option-one"
+      />
+      <Label for="preview-radio-1" class="text-sm font-normal">Option 1</Label>
     </div>
-    <div class="flex flex-row justify-items-start space-x-2">
-      <RadioGroupItem class=" border border-gray-500 " id="option-two" value="option-two" />
-      <Label for="option-two">Option 2</Label>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem
+        class="border border-gray-500"
+        id="preview-radio-2"
+        value="option-two"
+      />
+      <Label for="preview-radio-2" class="text-sm font-normal">Option 2</Label>
     </div>
   </RadioGroup>
 </template>
