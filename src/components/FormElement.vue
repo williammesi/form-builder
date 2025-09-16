@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { GripHorizontal, Trash } from 'lucide-vue-next';
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import type { FormElement } from '@/types/form';
 import { computed } from 'vue';
-import { useFormBuilderStore } from '@/stores/FormBuilderStore'
+import { useFormBuilderStore } from '@/stores/FormBuilderStore';
+import {
+  CheckboxGroupRenderer,
+  RadioGroupRenderer,
+  BlockElementRenderer,
+  ElementControls
+} from '@/components/FormElementRenderers';
 
 const store = useFormBuilderStore()
 
@@ -18,59 +19,12 @@ const props = defineProps<Props>();
 
 const isSelected = computed(() => store.selectedElementId === props.element.id)
 
+// Element type configurations
+const BLOCK_ELEMENT_TYPES = ['input', 'select', 'textarea'] as const
 
-
-// Helper to determine if element should use group layout (like checkbox-group)
-const isGroupElement = computed(() => {
-  return ['checkbox-group', 'radio-group'].includes(props.element.type)
-})
-
-// Determine which component to render based on element type
-const elementConfig = computed(() => {
-  const baseProps = {
-    placeholder: props.element.placeholder
-  }
-  
-  switch (props.element.type) {
-    case 'input':
-      return {
-        component: Input,
-        props: {
-          ...baseProps,
-          type: props.element.inputType || 'text'
-        }
-      }
-    case 'select':
-      return {
-        component: Select,
-        props: baseProps
-      }
-    case 'textarea':
-      return {
-        component: Textarea,
-        props: {
-          ...baseProps,
-          rows: props.element.rows || 3,
-          class: 'border border-gray-300 rounded-md p-2 resize-none'
-        }
-      }
-    
-    case 'checkbox-group':
-      return {
-        component: 'div',
-        props: baseProps
-      }
-    case 'radio-group':
-      return {
-        component: 'div',
-        props: baseProps
-      }
-    default:
-      return {
-        component: 'div',
-        props: baseProps
-      }
-  }
+// Helper to determine element layout type
+const isBlockElement = computed(() => {
+  return BLOCK_ELEMENT_TYPES.includes(props.element.type as any)
 })
 </script>
 
@@ -84,72 +38,31 @@ const elementConfig = computed(() => {
     @keydown.enter="store.selectElement(props.element.id)"
   >
     <!-- Conditional layout based on element type -->
-    
-    <!-- Group layout for checkbox-group, radio-group, etc. -->
-    <div v-if="isGroupElement" class="flex flex-col w-8/10">
-      <label class="block font-medium mb-1">{{ element.label }}</label>
-      <div v-if="element.groupTitle" class="text-sm text-gray-600 mb-2">
-        {{ element.groupTitle }}
-      </div>
-      <div class="space-y-2">
-        <div 
-          v-for="(option, index) in element.options || []" 
-          :key="`${element.id}-option-${index}`"
-          class="flex items-center gap-2"
-        >
-          <Checkbox />
-          <span class="text-sm">{{ option }}</span>
-        </div>
-      </div>
-    </div>
-    
-    
-    
-    <!-- Block layout for input, textarea, select, etc. -->
-    <div v-else class="flex flex-col items-start w-8/10">
-      <label class="block font-medium mb-1">{{ element.label }}</label>
-      <component
-        :is="elementConfig.component"
-        v-bind="elementConfig.props"
-        class="w-full"
-      >
-        <template v-if="element.type === 'select'">
-          <SelectTrigger class="w-full">
-            <SelectValue :placeholder="element.placeholder" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem 
-              v-for="option in element.options || []" 
-              :key="option" 
-              :value="option"
-            >
-              {{ option }}
-            </SelectItem>
-          </SelectContent>
-        </template>
-      </component>
-    </div>
-    
-    <!-- Controls (same for all elements) -->
-    <div class="flex flex-row px-4 items-center gap-2 w-2/10 justify-center">
-      <button
-        class="p-2 rounded-lg bg-red-400 hover:bg-red-500 cursor-pointer"
-        @click.stop="store.removeElement(props.element.id)"
-      >
-        <Trash class="w-5 h-5 text-gray-50 cursor-pointer" />
-      </button>
-      <button class="drag-handle">
-        <GripHorizontal class="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-move" />
-      </button>
-    </div>
+
+    <!-- Checkbox Group -->
+    <CheckboxGroupRenderer
+      v-if="element.type === 'checkbox-group'"
+      :element="element"
+    />
+
+    <!-- Radio Group -->
+    <RadioGroupRenderer
+      v-else-if="element.type === 'radio-group'"
+      :element="element"
+    />
+
+    <!-- Block Elements (input, select, textarea) -->
+    <BlockElementRenderer
+      v-else-if="isBlockElement"
+      :element="element"
+    />
+
+    <!-- Element Controls -->
+    <ElementControls :element-id="element.id" />
   </div>
 </template>
 
 <style scoped>
-.drag-handle {
-  cursor: move;
-}
-
 .form-element-item {
   cursor: pointer;
 }
