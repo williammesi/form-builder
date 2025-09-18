@@ -39,6 +39,8 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
     selectedElementId.value = id
   }
 
+  const elementsToJson = computed(() => JSON.stringify(elements.value, null, 2));
+
   // Update a property of the selected form element
   const updateSelectedElementProperty = (property: string, value: any) => {
     if (!selectedElement.value) return;
@@ -156,6 +158,7 @@ export const useFormBuilderStore = defineStore('formBuilder', () => {
     updateSelectedElementProperty,
     updateOption,
     addOption,
-    removeOption
+    removeOption,
+    elementsToJson
   }
 })
