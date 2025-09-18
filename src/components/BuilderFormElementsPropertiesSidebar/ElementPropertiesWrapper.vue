@@ -86,9 +86,9 @@ const getSpecificPropertiesComponent = computed(() => {
         <SidebarMenuItem>
           <Input
             class="border-gray-400"
-            :value="element.label"
+            :model-value="element.label"
             placeholder="Enter label"
-            @input="store.updateSelectedElementProperty('label', $event.target.value)"
+            @update:model-value="store.updateSelectedElementProperty('label', $event)"
           />
         </SidebarMenuItem>
       </SidebarMenu>
@@ -103,8 +103,8 @@ const getSpecificPropertiesComponent = computed(() => {
         <SidebarMenuItem>
           <Input
             class="border-gray-400"
-            :value="element.placeholder"
-            @input="store.updateSelectedElementProperty('placeholder', $event.target.value)"
+            :model-value="element.placeholder"
+            @update:model-value="store.updateSelectedElementProperty('placeholder', $event)"
             placeholder="Enter placeholder"
           />
         </SidebarMenuItem>

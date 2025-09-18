@@ -36,9 +36,9 @@ const { startEditing, updateEditingValue, finishEditing, getDisplayValue } =
         <SidebarMenuItem>
           <Input
             class="border-gray-400"
-            :value="element.groupTitle || ''"
+            :model-value="element.groupTitle || ''"
             placeholder="e.g., 'Select all that apply:'"
-            @input="store.updateSelectedElementProperty('groupTitle', $event.target.value)"
+            @update:model-value="store.updateSelectedElementProperty('groupTitle', $event)"
           />
         </SidebarMenuItem>
       </SidebarMenu>
