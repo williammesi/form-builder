@@ -46,8 +46,7 @@ const elementConfig = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-start w-8/10">
-    <label class="block font-medium mb-1">{{ element.label }}</label>
+  <div class="flex flex-col items-start w-full">
     <component
       :is="elementConfig.component"
       v-bind="elementConfig.props"

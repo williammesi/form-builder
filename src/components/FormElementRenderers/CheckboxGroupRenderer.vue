@@ -12,8 +12,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div class="flex flex-col w-8/10">
-    <label class="block font-medium mb-1">{{ element.label }}</label>
+  <div class="flex flex-col w-full items-start">
     <div v-if="element.groupTitle" class="text-sm text-gray-600 mb-2">
       {{ element.groupTitle }}
     </div>

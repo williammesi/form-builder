@@ -70,6 +70,7 @@ const exportJson = () => {
           >
             <template #item="{ element }">
               <FormElement
+                :mode="'builder'"
                 :key="element.id"
                 :element="element"
                 
