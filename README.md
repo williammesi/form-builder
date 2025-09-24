@@ -13,11 +13,10 @@ A modern, interactive form builder application built with Vue.js 3, TypeScript, 
 ### Features
 
 - **Drag & Drop Interface**: Intuitive form building with draggable components
-- **Form Elements**: Support for text inputs, textareas, checkboxes, radio buttons, selects, and phone inputs
+- **Form Elements**: Support for text inputs,email inputs, number inputs, textareas, checkboxes, radio buttons and selects
 - **Real-time Preview**: See your form as you build it
 - **JSON Export/Import**: Save and load form configurations
-- **Form Validation**: Built-in validation using Vee-Validate and Zod
-- **Responsive Design**: Mobile-friendly interface
+- **Form Validation**: Built-in validation
 - **Form Rendering**: Standalone form renderer for testing
 
 ### Technologies Used
@@ -80,11 +79,10 @@ Une application moderne et interactive de création de formulaires développée 
 ### Fonctionnalités
 
 - **Interface Glisser-Déposer**: Création intuitive de formulaires avec des composants déplaçables
-- **Éléments de Formulaire**: Support pour champs texte, zones de texte, cases à cocher, boutons radio, listes déroulantes et saisie téléphonique
+- **Éléments de Formulaire**: Support pour champs texte, emails, nombres, zones de texte, cases à cocher, boutons radio, listes déroulantes
 - **Aperçu en Temps Réel**: Visualisez votre formulaire pendant sa création
 - **Export/Import JSON**: Sauvegarde et chargement des configurations de formulaires
-- **Validation de Formulaire**: Validation intégrée utilisant Vee-Validate et Zod
-- **Design Responsive**: Interface adaptée aux mobiles
+- **Validation de Formulaire**: Validation intégrée
 - **Rendu de Formulaire**: Moteur de rendu autonome pour les tests
 
 ### Technologies Utilisées
