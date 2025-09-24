@@ -1,32 +1,25 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import DefaultLayout from '@/layouts/DefaultLayout.vue';
-import Home from '@/pages/Home.vue';
-import FormBuilder from '@/pages/FormBuilder.vue';
-import FormRenderer from '@/pages/FormRenderer.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import DefaultLayout from "@/layouts/DefaultLayout.vue";
+import FormBuilder from "@/pages/FormBuilder.vue";
+import FormRenderer from "@/pages/FormRenderer.vue";
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: DefaultLayout,
     children: [
       {
-        path: '',
-        name: 'Home',
-        component: Home,
-      },
-      {
-        path: 'form-builder',
-        name: 'FormBuilder',
+        path: "",
+        name: "FormBuilder",
         component: FormBuilder,
       },
       {
-        path: 'form-renderer',
-        name: 'FormRenderer',
+        path: "form-renderer",
+        name: "FormRenderer",
         component: FormRenderer,
       },
     ],
   },
- 
 ];
 
 const router = createRouter({
